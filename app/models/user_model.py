@@ -16,4 +16,4 @@ class Users(Base):
     is_active=Column(Boolean, default=True)
     created_at=Column(DateTime(timezone=True), server_default=func.now())
 
-    tasks=relationship("Task", back_populates="owner")
+    tasks=relationship("Tasks", back_populates="owner")
