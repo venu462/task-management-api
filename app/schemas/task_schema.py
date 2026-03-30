@@ -3,11 +3,17 @@ from typing import Optional
 from datetime import datetime
 from app.models.task_model import TaskStatus
 import uuid
+from enum import Enum
+
+class TaskStatus(str, Enum):
+    todo = "todo"
+    in_progress = "in_progress"
+    done = "done"
 
 class TaskBase(BaseModel):
     title: str
     description: Optional[str]=None
-    status: TaskStatus.todo
+    status: TaskStatus = TaskStatus.todo
     due_date: Optional[datetime]=None
 
 class TaskCreate(TaskBase):
