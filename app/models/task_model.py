@@ -23,5 +23,5 @@ class Task(Base):
     updated_at=Column(DateTime(timezone=True), onupdate=func.now())
 
 
-owner_id= Column(UUID(as_uuid=True), ForeignKey("user_model.id"), nullable=False)
-owner=relationship("User", back_populates="task")
+    owner_id= Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    owner=relationship("Users", back_populates="tasks")
