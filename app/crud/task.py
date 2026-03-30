@@ -1,5 +1,7 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
-from app.models.task_model import Task
+from app.models.task_model import Task, TaskStatus
 from app.schemas.task_schema import TaskCreate, TaskUpdate
 import uuid
 
@@ -17,8 +19,16 @@ def create_task(db: Session, task: TaskCreate, user_id: uuid.UUID):
     db.refresh(db_tasks)
     return db_tasks 
 
-def get_tasks(db: Session, user_id: uuid.UUID):
-    return db.query(Task).filter(Task.owner_id == user_id).all()
+def get_tasks(
+        db: Session, 
+        user_id: uuid.UUID,
+        status: Optional[TaskStatus] = None,
+        skip: int = 0,
+        limit: int = 10):
+    query = db.query(Task).filter(Task.owner_id == user_id)
+    if status:
+        query = query.filter(Task.status == status)
+    return query.offset(skip).limit(limit).all()
 
 def get_task(db: Session, task_id: uuid.UUID, user_id: uuid.UUID):
     return db.query(Task).filter(
