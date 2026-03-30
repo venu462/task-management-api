@@ -1,13 +1,14 @@
+from typing import Optional
 import uuid
 
-from fastapi import APIRouter, status, HTTPException, Depends
+from fastapi import APIRouter, status, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.core.database import get_db
 from app.crud import task as task_crud
 from app.models.user_model import Users
-from app.schemas.task_schema import TaskCreate, TaskResponse, TaskUpdate
+from app.schemas.task_schema import TaskCreate, TaskResponse, TaskStatus, TaskUpdate
 
 
 router = APIRouter()
@@ -23,9 +24,12 @@ def create_task_endpoint(
 @router.get("/", response_model=list[TaskResponse])
 def get_tasks_endpoint(
     db: Session = Depends(get_db),
-    current_user: Users = Depends(get_current_user)
+    current_user: Users = Depends(get_current_user),
+    status: Optional[TaskStatus] = None,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1)
 ):
-    return task_crud.get_tasks(db, current_user.id)
+    return task_crud.get_tasks(db, current_user.id, status, skip, limit)
 
 @router.get("/{task_id}", response_model=TaskResponse)
 def get_task_endpoint(

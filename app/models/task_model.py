@@ -19,7 +19,7 @@ class Task(Base):
     description=Column(String, nullable=True)
     status=Column(Enum(TaskStatus), default=TaskStatus.todo, nullable=False)
     due_date=Column(DateTime(timezone=True), nullable=True)
-    created_date=Column(DateTime(timezone=True), server_default=func.now())
+    created_at=Column(DateTime(timezone=True), server_default=func.now())
     updated_at=Column(DateTime(timezone=True), onupdate=func.now())
 
 
